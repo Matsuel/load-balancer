@@ -9,6 +9,7 @@
 # 🔥 Architecture du monstre
 ## 1️⃣ Ingestion des requêtes
 
+- CLI ou interface web pour envoyer des tâches
 - API REST ou WebSockets pour push des jobs dans la file
 - Stockage en Redis ou Kafka pour gérer la file
 - Priorisation des tâches (low, medium, high)
