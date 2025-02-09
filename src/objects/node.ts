@@ -1,5 +1,6 @@
 import { io, Socket } from "socket.io-client";
 import type { Server } from "./server";
+import { NodeType } from "../constantes/enum";
 
 export class Node {
     ip: string;
@@ -20,7 +21,7 @@ export class Node {
 
     connectToServer(server: Server) {
         // Initialize the socket server connection
-        this.socketServer = io(`http://${server.address}:${server.port}`);
+        this.socketServer = io(`http://${server.address}:${server.port}`, { query: { type: NodeType.NODE } });
         console.log(`Connecting to server on port ${server.port}`);
     }
 
@@ -31,5 +32,8 @@ export class Node {
             return;
         }
         this.socketServer.emit('test', `Hello from ${this.hostname}`);
+        this.socketServer.on('test', (data) => {
+            console.log(`Test message received: ${data}`);
+        });
     }
 }
