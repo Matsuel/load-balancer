@@ -1,7 +1,16 @@
-import { LogLevelColors } from "../constantes/enum";
+import { LogLevel, LogLevelColors } from "../constantes/enum";
 
 export class Logger {
-    logFunction: (message: string) => void = console.log;
+    private logFunction: (message: string) => void = console.log;
+    private logLevel: string;
+
+    constructor(logLevel: string = LogLevel.DEBUG) {
+        this.logLevel = logLevel;
+    }
+
+    public setLogLevel(logLevel: LogLevel): void {
+        this.logLevel = logLevel;
+    }
 
     private getNowDate(): string {
         const now = new Date();

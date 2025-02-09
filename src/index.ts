@@ -2,6 +2,7 @@
 // import { Node } from "./objects/node";
 // import { Server } from "./objects/server";
 
+import { LogLevel } from "./constantes/enum";
 import { Logger } from "./utils/logger";
 
 // const server = new Server().start();
@@ -20,6 +21,7 @@ import { Logger } from "./utils/logger";
 // }, 2000);
 
 const logger = new Logger();
+logger.setLogLevel(LogLevel.DEBUG);
 
 logger.info('This is an info message', 'test');
 logger.debug('This is a debug message');
