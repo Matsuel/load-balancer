@@ -25,9 +25,11 @@ export class Node {
     }
 
     sendTestMessage() {
+        // Send a test message to the server if the connection is established
         if (!this.socketServer) {
+            console.log('No server connection established');
             return;
         }
-        this.socketServer.emit('test', 'Hello from Node');
+        this.socketServer.emit('test', `Hello from ${this.hostname}`);
     }
 }
