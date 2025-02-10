@@ -23,6 +23,7 @@ export class Server {
             // TODO: Create functions to handle the different client types
             if (clientType === NodeType.NODE) {
                 socket.join('nodes');
+                // TODO: Mettre à jour les tables DNS et envoyer les nouvelles tables aux clients
                 console.log(`Node connected: ${socket.id} joining nodes room`);
             } else if (clientType === NodeType.CLIENT) {
                 socket.join('clients');
