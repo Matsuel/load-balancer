@@ -1,15 +1,15 @@
-import { LogLevel, LogLevelColors } from "../constantes/enum";
+import { LogLevel, LogLevelColors, LogLevelValues } from "../constantes/enum";
 
 export class Logger {
     private logFunction: (message: string) => void = console.log;
-    private logLevel: string;
+    private logLevel: number = 0;
 
-    constructor(logLevel: string = LogLevel.DEBUG) {
-        this.logLevel = logLevel;
+    constructor(logLevel: LogLevel = LogLevel.DEBUG) {
+        this.setLogLevel(logLevel);
     }
 
     public setLogLevel(logLevel: LogLevel): void {
-        this.logLevel = logLevel;
+        this.logLevel = LogLevelValues[logLevel];
     }
 
     private getNowDate(): string {
@@ -17,23 +17,32 @@ export class Logger {
         return now.toLocaleString();
     }
 
-    public log(color: string, level: string, message: string[]): void {
+    private canLog(level: LogLevel): boolean {
+        return LogLevelValues[level] >= this.logLevel;
+    }
+
+    public log(color: string, level: LogLevel, message: string[]): void {
+        if (!this.canLog(level)) return;
         this.logFunction(color + `[${level}] ${this.getNowDate()} : ${message.join(' ')}` + LogLevelColors.END);
     }
 
     public info(...message: string[]): void {
-        this.log(LogLevelColors.INFO, 'INFO', message);
+        if (!this.canLog(LogLevel.INFO)) return;
+        this.log(LogLevelColors.INFO, LogLevel.INFO, message);
     }
 
     public debug(...message: string[]): void {
-        this.log(LogLevelColors.DEBUG, 'DEBUG', message);
+        if (!this.canLog(LogLevel.DEBUG)) return;
+        this.log(LogLevelColors.DEBUG, LogLevel.DEBUG, message);
     }
 
     public warn(...message: string[]): void {
-        this.log(LogLevelColors.WARN, 'WARN', message);
+        if (!this.canLog(LogLevel.WARN)) return;
+        this.log(LogLevelColors.WARN, LogLevel.WARN, message);
     }
 
     public error(...message: string[]): void {
-        this.log(LogLevelColors.ERROR, 'ERROR', message);
+        if (!this.canLog(LogLevel.ERROR)) return;
+        this.log(LogLevelColors.ERROR, LogLevel.ERROR, message);
     }
 }

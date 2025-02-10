@@ -18,3 +18,10 @@ export enum LogLevel {
     WARN = 'WARN',
     ERROR = 'ERROR',
 }
+
+export enum LogLevelValues {
+    DEBUG = 20,
+    INFO = 30,
+    WARN = 40,
+    ERROR = 50
+}

@@ -21,7 +21,7 @@ import { Logger } from "./utils/logger";
 // }, 2000);
 
 const logger = new Logger();
-logger.setLogLevel(LogLevel.DEBUG);
+logger.setLogLevel(LogLevel.INFO);
 
 logger.info('This is an info message', 'test');
 logger.debug('This is a debug message');
