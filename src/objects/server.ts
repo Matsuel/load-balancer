@@ -19,14 +19,17 @@ export class Server {
         this.io = new ServerBase(this.port);
         logger.info(`Server started on port ${this.port}`);
         this.io.on('connection', (socket) => {
-            const clientType = socket.handshake.query.type;
+            const { type, hostname, ip, port } = socket.handshake.query;
 
             // TODO: Create functions to handle the different client types
-            if (clientType === NodeType.NODE) {
+            if (type === NodeType.NODE) {
+                logger.info(`Node connected: ${hostname} (${ip}:${port})`);
+                this.dnsRecords.push({ ip: ip as string, port: port as string, hostname: hostname as string });
                 socket.join('nodes');
                 // TODO: Mettre à jour les tables DNS et envoyer les nouvelles tables aux clients
                 logger.info(`Node connected: ${socket.id} joining nodes room`);
-            } else if (clientType === NodeType.CLIENT) {
+                this.broadcastDNSRecords();
+            } else if (type === NodeType.CLIENT) {
                 socket.join('clients');
                 logger.info(`Client connected: ${socket.id} joining clients room`);
             }
@@ -51,6 +54,7 @@ export class Server {
         if (!this.io) {
             return;
         }
-        this.io.emit('dns-records', this.dnsRecords);
+        logger.debug('Broadcasting DNS records to all nodes');
+        this.io.to('nodes').emit('dns', this.dnsRecords);
     }
 }

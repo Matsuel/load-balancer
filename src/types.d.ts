@@ -1,5 +1,5 @@
 export type DNSServerRecord = {
     ip: string;
-    port: number;
+    port: string;
     hostname: string;
 };

@@ -2,6 +2,7 @@ import { io, Socket } from "socket.io-client";
 import type { Server } from "./server";
 import { NodeType } from "../constantes/enum";
 import { logger } from "..";
+import type { DNSServerRecord } from "../types";
 
 export class Node {
     ip: string;
@@ -22,7 +23,10 @@ export class Node {
 
     connectToServer(server: Server) {
         // Initialize the socket server connection
-        this.socketServer = io(`http://${server.address}:${server.port}`, { query: { type: NodeType.NODE } });
+        this.socketServer = io(`http://${server.address}:${server.port}`, { query: { type: NodeType.NODE, hostname: this.hostname, ip: this.ip, port: this.port } });
+        this.socketServer.on('dns', (data: DNSServerRecord[]) => {
+            logger.debug("New DNS records received");
+        });
         logger.info(`Connecting to server on port ${server.port}`);
     }
 
