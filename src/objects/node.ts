@@ -1,6 +1,7 @@
 import { io, Socket } from "socket.io-client";
 import type { Server } from "./server";
 import { NodeType } from "../constantes/enum";
+import { logger } from "..";
 
 export class Node {
     ip: string;
@@ -12,7 +13,7 @@ export class Node {
         this.ip = ip;
         this.port = port;
         this.hostname = hostname;
-        console.log(`Node created: ${this}`);
+        logger.info(`Node created: ${this}`);
     }
 
     toString() {
@@ -22,18 +23,18 @@ export class Node {
     connectToServer(server: Server) {
         // Initialize the socket server connection
         this.socketServer = io(`http://${server.address}:${server.port}`, { query: { type: NodeType.NODE } });
-        console.log(`Connecting to server on port ${server.port}`);
+        logger.info(`Connecting to server on port ${server.port}`);
     }
 
     sendTestMessage() {
         // Send a test message to the server if the connection is established
         if (!this.socketServer) {
-            console.log('No server connection established');
+            logger.error('No server connection established');
             return;
         }
         this.socketServer.emit('test', `Hello from ${this.hostname}`);
         this.socketServer.on('test', (data) => {
-            console.log(`Test message received: ${data}`);
+            logger.debug(`Test message received: ${data}`);
         });
     }
 }

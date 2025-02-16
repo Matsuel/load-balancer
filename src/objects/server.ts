@@ -1,6 +1,7 @@
 import { Server as ServerBase, Socket } from 'socket.io';
 import type { DNSServerRecord } from '../types';
 import { NodeType } from '../constantes/enum';
+import { logger } from '..';
 
 export class Server {
     address: string;
@@ -16,7 +17,7 @@ export class Server {
 
     start(): Server {
         this.io = new ServerBase(this.port);
-        console.log(`Server started on port ${this.port}`);
+        logger.info(`Server started on port ${this.port}`);
         this.io.on('connection', (socket) => {
             const clientType = socket.handshake.query.type;
 
@@ -24,22 +25,22 @@ export class Server {
             if (clientType === NodeType.NODE) {
                 socket.join('nodes');
                 // TODO: Mettre à jour les tables DNS et envoyer les nouvelles tables aux clients
-                console.log(`Node connected: ${socket.id} joining nodes room`);
+                logger.info(`Node connected: ${socket.id} joining nodes room`);
             } else if (clientType === NodeType.CLIENT) {
                 socket.join('clients');
-                console.log(`Client connected: ${socket.id} joining clients room`);
+                logger.info(`Client connected: ${socket.id} joining clients room`);
             }
 
 
             this.clients.set(socket.id, socket);
 
             socket.on('disconnect', () => {
-                console.log(`Client disconnected: ${socket.id}`);
+                logger.debug(`Client disconnected: ${socket.id}`);
                 this.clients.delete(socket.id);
             });
 
             socket.on('test', (data) => {
-                console.log(`Test message received: ${data}`);
+                logger.debug(`Test message received: ${data}`);
                 this.io?.emit('test', 'Hello from the server');
             });
         });
